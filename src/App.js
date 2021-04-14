@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Customer from "./components/Customer";
+import Wata from "./components/Wata";
 import "./App.css";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -26,43 +26,16 @@ const styles = (theme) => ({
   },
 });
 
-const customers = [
-  {
-    id: 1,
-    image: "https://placeimg.com/64/64/1",
-    name: "홍길동",
-    birthday: "961222",
-    gender: "남자",
-    job: "대학생",
-  },
-  {
-    id: 2,
-    image: "https://placeimg.com/64/64/2",
-    name: "나동빈",
-    birthday: "960508",
-    gender: "남자",
-    job: "프로그래머",
-  },
-  {
-    id: 3,
-    image: "https://placeimg.com/64/64/3",
-    name: "이순신",
-    birthday: "961127",
-    gender: "남자",
-    job: "디자이너",
-  },
-];
-
 class App extends Component {
   state = {
-    customers: "",
+    watas: "",
     completed: 0,
   };
 
   componentDidMount() {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
-      .then((res) => this.setState({ customers: res }))
+      .then((res) => this.setState({ watas: res }))
       .catch((err) => console.log(err));
   }
 
@@ -71,9 +44,9 @@ class App extends Component {
   }
 
   callApi = async () => {
-    //const response = await fetch("/api/customers");
-    //const body = await response.json();
-    return customers;
+    const response = await fetch("http://warchive.pythonanywhere.com/api");
+    const body = await response.json();
+    return body;
   };
 
   progress = () => {
@@ -83,31 +56,47 @@ class App extends Component {
 
   render() {
     const { classes } = this.props;
-    return (
+    return (  
       <Paper className={classes.root}>
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell>번호</TableCell>
-              <TableCell>이미지</TableCell>
-              <TableCell>이름</TableCell>
-              <TableCell>생년월일</TableCell>
-              <TableCell>성별</TableCell>
-              <TableCell>직업</TableCell>
+              <TableCell>아이디</TableCell>
+              <TableCell>관리번호</TableCell>
+              <TableCell>제목</TableCell>
+              <TableCell>제작</TableCell>
+              <TableCell>대분류</TableCell>
+              <TableCell>중분류</TableCell>
+              <TableCell>장르</TableCell>
+              <TableCell>키워드</TableCell>
+              <TableCell>주의키워드</TableCell>
+              <TableCell>플랫폼</TableCell>
+              <TableCell>썸네일</TableCell>
+              <TableCell>추가한사람</TableCell>
+              <TableCell>수정일자</TableCell>
+              <TableCell>삭제여부</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.customers ? (
-              customers.map((c) => {
+            {this.state.watas ? (
+              this.state.watas.wata_list.map((w) => {
                 return (
-                  <Customer
-                    key={c.id}
-                    id={c.id}
-                    image={c.image}
-                    name={c.name}
-                    birthday={c.birthday}
-                    gender={c.gender}
-                    job={c.job}
+                  <Wata
+                    key={w.wata_id}
+                    wata_id={w.wata_id}
+                    manage_index={w.manage_index}
+                    title={w.title}
+                    creator={w.creator}
+                    category={w.category}
+                    sub_category={w.sub_category}
+                    genre={w.genre}
+                    keywords={w.keywords}
+                    cautions={w.cautions}
+                    platforms={w.platforms}
+                    thumnail={w.thumnail}
+                    adder={w.adder}
+                    edit_date={w.edit_date}
+                    isDelete={w.isDelete}
                   />
                 );
               })
